@@ -17,8 +17,8 @@ export default function IdeaCard({ title, description, created_at }: IdeaCardPro
     <div className="bg-white rounded-lg shadow-md overflow-hidden flex flex-col">
       <div className="w-full aspect-[4/3] relative">
         <Image
-          src="/social-media.jpg"
-          alt="Static social media image"
+          src="/software.png"
+          alt="Static software image"
           className="object-cover"
           width={400}
           height={300}
