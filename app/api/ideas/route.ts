@@ -24,16 +24,14 @@ export async function GET(request: NextRequest) {
         });
 
         if (!response.ok) {
-            // Log the full response if not OK, for debugging
             const errorBody = await response.text();
             console.error(`HTTP error! status: ${response.status}, body: ${errorBody}`);
             throw new Error(`HTTP error! status: ${response.status}`);
         }
 
         const data = await response.json();
-        // Removed console.log(data) from here as it's not needed for error diagnosis
         return NextResponse.json(data);
-    } catch (error: any) { // Catch as any to access potential error properties
+    } catch (error: any) { 
         console.error('API Fetch Error Details:', error.message, error.stack, error);
         return NextResponse.json(
             { error: 'Failed to fetch ideas', details: error.message || 'Unknown error' },

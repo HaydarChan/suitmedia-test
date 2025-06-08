@@ -5,7 +5,7 @@ import SlantedBanner from '@/components/ideas/SlantedBanner';
 import SortControls from '@/components/ideas/SortControls';
 import IdeaCard from '@/components/ideas/IdeaCard';
 import Pagination from '@/components/ideas/Pagination';
-import { GET as ideasApiHandler } from '@/app/api/ideas/route'; // Import the GET handler from your API route
+import { GET as ideasApiHandler } from '@/app/api/ideas/route';
 
 async function getIdeas(page: number, perPage: number, sort: string) {
   const params = new URLSearchParams();
@@ -13,15 +13,14 @@ async function getIdeas(page: number, perPage: number, sort: string) {
   params.append('page[size]', perPage.toString());
   params.append('sort', sort);
 
-  // Create a mock NextRequest object to pass to the API handler
   const mockRequest = {
     nextUrl: {
       searchParams: params,
     },
-  } as any; // Cast to any to bypass strict type checking for mock object
+  } as any; 
 
   try {
-    const response = await ideasApiHandler(mockRequest); // Directly call the API handler
+    const response = await ideasApiHandler(mockRequest); 
     if (!response.ok) {
       throw new Error(`Failed to fetch ideas: ${response.statusText}`);
     }
@@ -35,10 +34,10 @@ async function getIdeas(page: number, perPage: number, sort: string) {
 export default async function IdeasPage({
   searchParams,
 }: {
-  searchParams: { page?: string; perPage?: string; sort?: string };
+  searchParams: Record<string, string | string[] | undefined>;
 }) {
-  const page = parseInt(searchParams.page || '1', 10);
-  const perPage = parseInt(searchParams.perPage || '10', 10);
+  const page = parseInt(searchParams.page as string || '1', 10);
+  const perPage = parseInt(searchParams.perPage as string || '10', 10);
   const sort = (searchParams.sort === 'published_at' ? 'published_at' : '-published_at') as '-published_at' | 'published_at';
 
   const data = await getIdeas(page, perPage, sort);
