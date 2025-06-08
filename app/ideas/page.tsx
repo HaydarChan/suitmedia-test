@@ -1,11 +1,12 @@
-// Library Import
+// app/ideas/page.tsx
 import { Suspense } from 'react';
-// Components Import
 import SlantedBanner from '@/components/ideas/SlantedBanner';
 import SortControls from '@/components/ideas/SortControls';
 import IdeaCard from '@/components/ideas/IdeaCard';
 import Pagination from '@/components/ideas/Pagination';
 import { GET as ideasApiHandler } from '@/app/api/ideas/route';
+
+import { headers } from 'next/headers';
 
 async function getIdeas(page: number, perPage: number, sort: string) {
   const params = new URLSearchParams();
@@ -17,28 +18,26 @@ async function getIdeas(page: number, perPage: number, sort: string) {
     nextUrl: {
       searchParams: params,
     },
-  } as any; 
+  } as any;
 
-  try {
-    const response = await ideasApiHandler(mockRequest); 
-    if (!response.ok) {
-      throw new Error(`Failed to fetch ideas: ${response.statusText}`);
-    }
-    return response.json();
-  } catch (error) {
-    console.error('Error fetching ideas directly:', error);
-    throw new Error('Failed to fetch ideas');
+  const response = await ideasApiHandler(mockRequest);
+  if (!response.ok) {
+    throw new Error(`Failed to fetch ideas: ${response.statusText}`);
   }
+  return response.json();
 }
 
-export default async function IdeasPage({
-  searchParams,
-}: {
-  searchParams: Record<string, string | string[] | undefined>;
-}) {
-  const page = parseInt(searchParams.page as string || '1', 10);
-  const perPage = parseInt(searchParams.perPage as string || '10', 10);
-  const sort = (searchParams.sort === 'published_at' ? 'published_at' : '-published_at') as '-published_at' | 'published_at';
+export default async function IdeasPage() {
+  const headersList = await headers();
+  const fullUrl = headersList.get('x-url') || '';
+  const url = new URL(fullUrl || 'http://localhost:3000/ideas');
+
+  const searchParams = url.searchParams;
+
+  const page = parseInt(searchParams.get('page') || '1', 10);
+  const perPage = parseInt(searchParams.get('perPage') || '10', 10);
+  const sortParam = searchParams.get('sort');
+  const sort = sortParam === 'published_at' ? 'published_at' : '-published_at';
 
   const data = await getIdeas(page, perPage, sort);
   const ideas = data.data;
