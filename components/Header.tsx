@@ -70,8 +70,8 @@ const Header = () => {
                 isVisible ? 'translate-y-0' : '-translate-y-full'
             }`}
         >
-            <div className="flex flex-col items-center px-24 py-4">
-                <nav className="w-full flex items-center justify-between">
+            <div className="flex flex-col items-center py-4">
+                <nav className="w-full max-w-7xl flex items-center justify-between">
                     <Image 
                         src={SuitmediaLogo}
                         alt="Suitmedia Logo"
@@ -81,7 +81,7 @@ const Header = () => {
                         {navItems.map((item, index) => (
                             <li key={index} className="relative">
                                 {pathname === item.route && (
-                                    <div className="w-full h-4 bg-white" />
+                                    <div className="absolute w-full h-[4px] -bottom-2 bg-white" />
                                 )}
                                 <Link href={item.route} className="text-white">
                                     {item.label}
